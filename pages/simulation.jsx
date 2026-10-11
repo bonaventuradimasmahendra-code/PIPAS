@@ -58,6 +58,13 @@ export default function Simulation(){
                     <option value={"geothermal"}>Energi Geothermal</option>
                 </select>
                 <hr></hr>
+                <h4>Durasi</h4>
+                <select onChange={(e)=>setTime(Number(e.target.value))}>
+                    <option value={1}>Sehari</option>
+                    <option value={30}>Sebulan (30 Hari)</option>
+                    <option value={365}>Setahun (365 Hari)</option>
+                </select>
+                <hr></hr>
                 <h4>Sumber Hidro atau Lokasi Server</h4>
                 <select onChange={(e)=>setHydro(e.target.value)}>
                     <option value={"Tangki Penyimpanan Internal"}>Tangki Penyimpanan Internal</option>
