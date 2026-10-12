@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getPower, getPolluted, getEmmision} from "../services/services";
 import CurrencyInput from 'react-currency-input-field';
 
 export default function Simulation(){
@@ -7,37 +8,30 @@ export default function Simulation(){
     const [electricity, setElectricity] = useState('konvesional');
     const [hydro, setHydro] = useState('Tangki Penyimpanan Internal');
     const [coolerSys, setCoolerSys] = useState('Tertutup-IPAL');
-    const [pollutedWater, setPolutedWater] = useState(false);
+    const [pollutedWater, setPolutedWater] = useState('Aman');
     const [emmision, setEmmision] = useState(0);
+    const [averagePolluted, setAveragePolluted] = useState(0);
     const [cost, setCost] = useState(0);
     const [power, setPower] = useState(0);
+    const [pollutedMsg, setPollutedMsg] = useState('');
 
-    const getPower = ()=>{
-        if (scale === 0){
-            const powerScale = 10*(time*24)*1000;
-            setPower(powerScale);
-        } else if (scale === 1){
-            const powerScale = 50*(time*24)*1000;
-            setPower(powerScale);
-        } else if (scale === 2){
-            const powerScale = 150*(time*24)*1000;
-            setPower(powerScale);
+    const handleSubmit = (e)=>{
+        e.preventDefault()
+        const calculatedPower = getPower(scale, time);
+        const calculatedPollution = getPolluted(coolerSys, hydro, time);
+        const calculatedEmmision = getEmmision(electricity);
+
+        setPower(calculatedPower);
+        setAveragePolluted(calculatedPollution);
+        setEmmision(calculatedEmmision);
+
+        if (averagePolluted <= 30){
+            setPolutedWater('Aman');
+        } else if (averagePolluted <= 70) {
+            setPolutedWater('Sedang');
+        } else if (averagePolluted > 70) {
+            setPolutedWater("Tinggi");
         };
-    };
-
-    const getEmmision = ()=>{
-        if (electricity.toLowerCase() === 'geothermal') {
-            const emmisionPrecentage = 5;
-            setEmmision(emmisionPrecentage);
-        } else {
-            const emmisionPrecentage = 100;
-            setEmmision(emmisionPrecentage);
-        };
-    };
-
-    const handleSubmit = ()=>{
-        getPower();
-        getEmmision()
     }
     
     return (
@@ -58,7 +52,7 @@ export default function Simulation(){
                     <option value={"geothermal"}>Energi Geothermal</option>
                 </select>
                 <hr></hr>
-                <h4>Durasi</h4>
+                <h4>Durasi Hidup Data Center</h4>
                 <select onChange={(e)=>setTime(Number(e.target.value))}>
                     <option value={1}>Sehari</option>
                     <option value={30}>Sebulan (30 Hari)</option>
@@ -83,7 +77,7 @@ export default function Simulation(){
                     <option value={"None"}>Tanpa Menggunakan Metode Tertutup dan Instalasi Pengolahan Limbah</option>
                 </select>
                 <hr></hr>
-                <h4>Biaya</h4>
+                <h4>Biaya per Hari</h4>
                 <CurrencyInput placeholder="Masukkan nominal biaya" defaultValue={100000} decimalsLimit={2} groupSeparator="." decimalSeparator="," onChange={(e)=>setCost(e.target.value)}></CurrencyInput>
                 <button type="button" onClick={handleSubmit}>Periksa Hasil</button>
             </section>
