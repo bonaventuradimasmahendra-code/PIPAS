@@ -64,3 +64,10 @@ export function getPolluted (coolerSys, hydro, time){
 
     return (coolerPolluted + locationPolluted + duration)/3
 };
+
+export function totalCost (power, cost, time){
+    const powerKwh = power * 1000;
+    const duration = time * 24;
+    const total = (powerKwh * duration) * cost;
+    return total;
+};
