@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getPower, getPolluted, getEmmision} from "../services/services";
+import { getPower, getPolluted, getEmmision, totalCost, totalCost} from "../services/services";
 import CurrencyInput from 'react-currency-input-field';
 
 export default function Simulation(){
@@ -8,31 +8,45 @@ export default function Simulation(){
     const [electricity, setElectricity] = useState('konvesional');
     const [hydro, setHydro] = useState('Tangki Penyimpanan Internal');
     const [coolerSys, setCoolerSys] = useState('Tertutup-IPAL');
-    const [pollutedWater, setPolutedWater] = useState('Aman');
+    const [pollutedStatus, setPolutedStatus] = useState('Aman');
     const [emmision, setEmmision] = useState(0);
     const [averagePolluted, setAveragePolluted] = useState(0);
     const [cost, setCost] = useState(0);
     const [power, setPower] = useState(0);
     const [pollutedMsg, setPollutedMsg] = useState('');
+    const [showMsg, setShowMsg] = useState(false);
+    const [pollutedData, setPollutedData] = useState({});
+    const [total, setTotal] = useState(0);
 
     const handleSubmit = (e)=>{
         e.preventDefault()
         const calculatedPower = getPower(scale, time);
         const calculatedPollution = getPolluted(coolerSys, hydro, time);
         const calculatedEmmision = getEmmision(electricity);
+        const calculatedCost = totalCost(power, cost, time);
 
         setPower(calculatedPower);
-        setAveragePolluted(calculatedPollution);
+        setAveragePolluted(calculatedPollution.score);
         setEmmision(calculatedEmmision);
 
-        if (averagePolluted <= 30){
-            setPolutedWater('Aman');
-        } else if (averagePolluted <= 70) {
-            setPolutedWater('Sedang');
-        } else if (averagePolluted > 70) {
-            setPolutedWater("Tinggi");
+        setPollutedMsg(calculatedPollution.msg);
+        setPollutedData(calculatedPollution);
+        setTotal(calculatedCost);
+
+        if (calculatedPollution.score <= 30){
+            setPolutedStatus('Aman');
+        } else if (calculatedPollution.score <= 70) {
+            setPolutedStatus('Sedang');
+        } else if (calculatedPollution.score > 70) {
+            setPolutedStatus("Tinggi");
         };
-    }
+
+        if (showMsg) {
+            setTimeout(()=>{
+                showMsg(false)
+            }, 5000);
+        };
+    };
     
     return (
         <div className='simulation-container'>
@@ -81,6 +95,19 @@ export default function Simulation(){
                 <CurrencyInput placeholder="Masukkan nominal biaya" defaultValue={100000} decimalsLimit={2} groupSeparator="." decimalSeparator="," onChange={(e)=>setCost(e.target.value)}></CurrencyInput>
                 <button type="button" onClick={handleSubmit}>Periksa Hasil</button>
             </section>
+            {showMsg && (
+                <div className="popup-container">
+                    <div className="popup-background">
+                        <h1>TINGKAT POLUSI : {pollutedStatus}</h1>
+                        <h3>{pollutedMsg}</h3>
+                        <p>EMISI : {emmision}</p>
+                        <p>RATA-RATA POLUSI : {averagePolluted}</p>
+                        <p>TOTAL BIAYA : {total}</p>
+                        <p>{pollutedData.location_risk}</p>
+                        <p>{pollutedData.cooler_risk}</p>
+                    </div>
+                </div>
+            )}
         </div>
     )
 };
