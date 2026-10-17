@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getPower, getPolluted, getEmmision, totalCost, totalCost} from "../services/services";
+import { getPower, getPolluted, getEmmision, totalCost} from "../services/services";
 import CurrencyInput from 'react-currency-input-field';
 
 export default function Simulation(){
@@ -23,7 +23,7 @@ export default function Simulation(){
         const calculatedPower = getPower(scale, time);
         const calculatedPollution = getPolluted(coolerSys, hydro, time);
         const calculatedEmmision = getEmmision(electricity);
-        const calculatedCost = totalCost(power, cost, time);
+        const calculatedCost = totalCost(calculatedPower, cost, time);
 
         setPower(calculatedPower);
         setAveragePolluted(calculatedPollution.score);
@@ -41,11 +41,10 @@ export default function Simulation(){
             setPolutedStatus("Tinggi");
         };
 
-        if (showMsg) {
-            setTimeout(()=>{
-                setShowMsg(false)
-            }, 5000);
-        };
+        setShowMsg(true);
+        setTimeout(()=>{
+            setShowMsg(false)
+        }, 5000);
     };
     
     return (
@@ -100,6 +99,7 @@ export default function Simulation(){
                     <div className="popup-background">
                         <h1>TINGKAT POLUSI : {pollutedStatus}</h1>
                         <h3>{pollutedMsg}</h3>
+                        <p>DAYA : {power}</p>
                         <p>EMISI : {emmision}</p>
                         <p>RATA-RATA POLUSI : {averagePolluted}</p>
                         <p>TOTAL BIAYA : {total}</p>
