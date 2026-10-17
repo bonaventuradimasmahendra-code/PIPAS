@@ -43,7 +43,7 @@ export default function Simulation(){
 
         if (showMsg) {
             setTimeout(()=>{
-                showMsg(false)
+                setShowMsg(false)
             }, 5000);
         };
     };
