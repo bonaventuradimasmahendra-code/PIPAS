@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "framer-motion": "^14.7.1",
+    "lucide-react": "^1.63.0",
     "react": "^19.3.0",
     "react-currency-input-field": "^4.0.14",
-    "react-router-dom": "^7.18.4",
     "react-dom": "^19.2.8",
-    "lucide-react": "^1.59.0"
+    "react-router-dom": "^7.18.4",
+    "tailwindcss": "^4.3.3",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
