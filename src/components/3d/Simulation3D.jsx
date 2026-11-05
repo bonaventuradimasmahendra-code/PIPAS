@@ -52,10 +52,9 @@ export default function Simulation3D({
         score,
         pue: p.pue ?? (server > 0 ? Number(((server + ac) / server).toFixed(2)) : 1),
         thermalDelta: pol.msg?.thermal_delta ?? "-",
-        ecosystemHealth: pol.msg?.ecosystem_health ?? Math.max(5, Math.round(100 - score)),
       };
     } catch {
-      return { score: 0, pue: 1, thermalDelta: "-", ecosystemHealth: 100 };
+      return { score: 0, pue: 1, thermalDelta: "-" };
     }
   }, [scale, time, effectiveCooler, effectiveAirCooler, waterCoolerSys, hydro]);
 
@@ -80,15 +79,14 @@ export default function Simulation3D({
         waterCoolerSys={waterCoolerSys}
         pollutedStatus={status}
         pollutionScore={live.score}
-        pue={live.pue}
+        pue={String(live.pue)}
         thermalDelta={live.thermalDelta}
-        ecosystemHealth={live.ecosystemHealth}
         isPlaying={isPlaying}
         simSpeed={simSpeed}
         progress={progress}
         elapsedLabel={elapsedLabel}
         onTogglePlay={() => setIsPlaying((p) => !p)}
-        onCycleSpeed={() => setSimSpeed((s) => (s === 1 ? 2 : s === 2 ? 5 : 1))}
+        onCycleSpeed={() => setSimSpeed((s) => (s === 1 ? 2 : s === 2 ? 4 : 1))}
         onResetProgress={() => setProgress(0)}
         onChangeProgress={(val) => setProgress(val)}
       />

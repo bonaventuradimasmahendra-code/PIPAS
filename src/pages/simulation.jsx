@@ -14,7 +14,7 @@ export default function Simulation(){
     const [pollutedStatus, setPolutedStatus] = useState('Aman');
     const [emmision, setEmmision] = useState(0);
     const [averagePolluted, setAveragePolluted] = useState(0);
-    const [cost, setCost] = useState(0);
+    const [cost, setCost] = useState(100000);
     const [power, setPower] = useState(0);
     const [pollutedMsg, setPollutedMsg] = useState('');
     const [showMsg, setShowMsg] = useState(false);
